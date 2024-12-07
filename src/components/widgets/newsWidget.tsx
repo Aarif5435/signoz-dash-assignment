@@ -8,22 +8,23 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { useParams } from "react-router-dom";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { WidgetMenuBar } from "./widgetMenuBar";
+import { articlesss } from "../../DB/monkData";
 
 export const NewsWidget = (props) => {
   const { widget } = props.props;
   const [artNo, setArtNo] = useState(0);
   const [widgetMenu, setWidgetMenu] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const { articles, loading } = useSelector(
-    (state: RootState) => state.dashboard
-  );
+  // const { articlesss, loading } = useSelector(
+  //   (state: RootState) => state.dashboard
+  // );
   const { id } = useParams();
   useEffect(() => {
     dispatch(fetchNewsAsync());
   }, [dispatch]);
 
   const formattedDate = new Date(
-    articles[artNo]?.publishedAt
+    articlesss[artNo]?.publishedAt
   ).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -34,7 +35,7 @@ export const NewsWidget = (props) => {
     <>
       <div className="h-full p-2 flex flex-col justify-between">
         {/* Top content */}
-        {articles[artNo]?.author === null ? (
+        {articlesss[artNo]?.author === null ? (
           <div className="flex w-full justify-between">
             <div className="flex justify-center items-center mt-20">
               <IoIosInformationCircleOutline className="text-red-400 text-4xl" />
@@ -49,24 +50,24 @@ export const NewsWidget = (props) => {
             <div className="flex gap-4 text-white">
               <img
                 className="w-14 h-14 mt-2 rounded-full object-cover"
-                src={articles[artNo]?.urlToImage}
+                src={articlesss[artNo]?.urlToImage || ''}
                 alt="news"
               />
               <span className="w-full">
                 <h1 className="font-bold text-2xl w-full flex justify-between">
-                  {articles[artNo]?.title}
+                  {articlesss[artNo]?.title}
                   <WidgetMenuBar isOpen={widgetMenu} setIsOpen={setWidgetMenu} id={id} widgetId={props.props.id}/>
                 </h1>
                 <span className="text-sm text-[#9299A5]">
-                  {articles[artNo]?.source.name +
+                  {articlesss[artNo]?.source.name +
                     " - " +
-                    articles[artNo]?.author}
+                    articlesss[artNo]?.author}
                 </span>
               </span>
             </div>
             <div className="p-9">
               <p className="text-base text-[#9299A5]">
-                {articles[artNo]?.description}
+                {articlesss[artNo]?.description}
               </p>
             </div>
           </div>
@@ -82,10 +83,10 @@ export const NewsWidget = (props) => {
               onClick={() => artNo > 0 && setArtNo((pre) => pre - 1)}
               size={20}
             />
-            {artNo + 1 + " / " + articles.length}
+            {artNo + 1 + " / " + articlesss.length}
             <MdChevronRight
               onClick={() =>
-                artNo < articles.length - 1 && setArtNo((pre) => pre + 1)
+                artNo < articlesss.length - 1 && setArtNo((pre) => pre + 1)
               }
               size={20}
             />
@@ -95,7 +96,7 @@ export const NewsWidget = (props) => {
             className="bg-white p-2 text-black text-base rounded"
           >
             <a
-              href={articles[artNo]?.url}
+              href={articlesss[artNo]?.url}
               target="_blank"
               rel="noopener noreferrer"
             >

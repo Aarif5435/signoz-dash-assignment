@@ -238,8 +238,7 @@ const widgetSlice = createSlice({
       })
       .addCase(fetchNewsAsync.fulfilled, (state, action) => {
         state.loading = false;
-        const { articles } = action.payload;
-        state.articles = articles;
+        state.articles = [];
       })
       .addCase(fetchNewsAsync.rejected, (state, action) => {
         state.loading = false;
