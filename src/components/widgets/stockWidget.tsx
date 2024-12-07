@@ -1,4 +1,3 @@
-import TradingViewWidget from "react-tradingview-widget";
 import {
   fetchStockAsync,
   removeWidget,
