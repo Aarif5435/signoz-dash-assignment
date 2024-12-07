@@ -29,16 +29,16 @@ export const Dashboard = () => {
           </button>
         </div>
 
-        <div className="flex-grow gap-5 grid grid-cols-2 grid-flow-row w-full overflow-auto">
+      <div className="flex-grow gap-5 grid grid-cols-2 grid-flow-row w-full overflow-auto">
           {dash?.widgets?.map((widget, index) => (
             // <div className="border-2">
               <Widget key={index} widget={widget} widgets={dash?.widgets} />
             // </div>
           ))}
-        </div>
-
+          </div>
         {isModal && <WidgetModal setIsModal={setIsModal} />}
       </div>
+
     </>
   );
 };

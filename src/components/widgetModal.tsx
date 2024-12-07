@@ -20,14 +20,13 @@ export const WidgetModal = ({ setIsModal }: WidgerModal) => {
   const {id} = useParams()
 
   const widgets = useSelector((state:RootState)=> state.dashboard?.dashboard?.find((dash)=> dash.id === id)?.widgets)
-  console.log('widget=-------',widgets)
   const handleAddWidget = (type, props) => {
     const newWidgetBase = {
       id: uuid4(),
       type,
       props,
       position: { x: 0, y: 0 }, 
-      size: { width: 1500, height: 400 },
+      size: { width: 1000, height: 400 },
     };
   
     const existingWidgets = widgets; 

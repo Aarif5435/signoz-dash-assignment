@@ -20,8 +20,8 @@ export type DashboardState = {
   weatherLoading: boolean;
   stockLoading: boolean;
   articles: Articles[];
-  weather: WeatherData;
-  stocks: StockData;
+  weather: Record<string, WeatherData>;
+  stocks: Record<string, StockData>;
   currentDashId?: string;
 };
 
@@ -44,7 +44,7 @@ export type Widget = {
   position: {
     x: number;
     y: number;
-  }
+  };
 };
 
 export type widgetProps = {
@@ -60,8 +60,8 @@ const initialState: DashboardState = {
   stockLoading: false,
   error: null,
   articles: [],
-  weather: {} as WeatherData,
-  stocks: {} as StockData,
+  weather: {},
+  stocks: {},
   currentDashId: "",
 };
 
@@ -77,11 +77,11 @@ export const fetchNewsAsync = createAsyncThunk("News/fetchNews", async () => {
 
 export const fetchWeatherAsync = createAsyncThunk(
   "Weather/fetchWeather",
-  async ({ city = "delhi" }: { city: string }) => {
+  async ({ city = "delhi", widgetId }: { city: string; widgetId: string }) => {
     try {
       const res = await FetchWeather(city);
       const data: WeatherData = await res.json();
-      return data;
+      return { widgetId, data };
     } catch (err) {
       throw new Error("something went wrong " + err);
     }
@@ -90,11 +90,17 @@ export const fetchWeatherAsync = createAsyncThunk(
 
 export const fetchStockAsync = createAsyncThunk(
   "stocks/fetchStocks",
-  async ({ symbol = "APPL" }: { symbol: string }) => {
+  async ({
+    symbol = "APPL",
+    widgetId,
+  }: {
+    symbol: string;
+    widgetId: string;
+  }) => {
     try {
       const res = await FetchStock(symbol);
       const data: StockData = await res.json();
-      return data;
+      return { widgetId, data };
     } catch (err) {
       throw new Error("something went wrong");
     }
@@ -125,13 +131,13 @@ const widgetSlice = createSlice({
         dashboard.widgets = widgets ? widgets : dashboard.widgets;
         dashboard.updatedAt = new Date().toISOString();
       }
-      state.filterDashboard = [...state.dashboard]; 
+      state.filterDashboard = [...state.dashboard];
     },
     removeDashboard: (state, action) => {
       state.dashboard = state.dashboard.filter(
         (dash) => dash.id !== action.payload
       );
-      state.filterDashboard = [...state.dashboard]; 
+      state.filterDashboard = [...state.dashboard];
     },
     searchDashboard: (state, action) => {
       const searchQuery = action.payload.toLowerCase();
@@ -150,7 +156,7 @@ const widgetSlice = createSlice({
         dashboard.widgets.push(widget);
         dashboard.updatedAt = new Date().toLocaleDateString();
       }
-      state.filterDashboard = [...state.dashboard]; 
+      state.filterDashboard = [...state.dashboard];
     },
     removeWidget: (state, action) => {
       const { dashboardId, widgetId } = action.payload;
@@ -202,7 +208,7 @@ const widgetSlice = createSlice({
             widget.position = action.payload.position;
           }
         })
-      )
+      );
     },
     reorderWidgets: (state, action) => {
       const { dashboardId, reorderedWidgets } = action.payload;
@@ -243,7 +249,8 @@ const widgetSlice = createSlice({
       })
       .addCase(fetchWeatherAsync.fulfilled, (state, action) => {
         state.weatherLoading = false;
-        state.weather = action.payload;
+        const { widgetId, data } = action.payload;
+        state.weather[widgetId] = data;
       })
       .addCase(fetchWeatherAsync.rejected, (state, action) => {
         state.weatherLoading = false;
@@ -253,7 +260,8 @@ const widgetSlice = createSlice({
       })
       .addCase(fetchStockAsync.fulfilled, (state, action) => {
         state.stockLoading = false;
-        state.stocks = action.payload;
+        const { widgetId, data } = action.payload;
+        state.stocks[widgetId] = data;
       })
       .addCase(fetchStockAsync.rejected, (state, action) => {
         state.stockLoading = false;

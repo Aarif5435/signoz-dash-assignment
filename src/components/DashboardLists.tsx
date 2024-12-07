@@ -115,6 +115,7 @@ export const DashboardLists = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           dispatch(removeDashboard(dash.id));
+                          setIsDashModal({ [ind]: false });
                         }}
                         className="text-gray-200 flex items-center gap-2"
                       >

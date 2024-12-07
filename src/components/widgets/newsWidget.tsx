@@ -6,10 +6,13 @@ import { fetchNewsAsync, removeWidget } from "../../redux/widgetSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useParams } from "react-router-dom";
+import { IoIosInformationCircleOutline } from "react-icons/io";
+import { WidgetMenuBar } from "./widgetMenuBar";
 
 export const NewsWidget = (props) => {
-  const {widget} = props.props
+  const { widget } = props.props;
   const [artNo, setArtNo] = useState(0);
+  const [widgetMenu, setWidgetMenu] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { articles, loading } = useSelector(
     (state: RootState) => state.dashboard
@@ -27,42 +30,49 @@ export const NewsWidget = (props) => {
     day: "numeric",
   });
 
-
   return (
     <>
-      <div className="h-full p-2">
-        <div className="flex  gap-4 text-white">
-          <img
-            className="w-14 h-14 mt-2 rounded-full object-cover"
-            src={articles[artNo]?.urlToImage}
-            alt="news"
-          />
-          <span className="w-full">
-            <h1 className="font-bold text-2xl w-full flex justify-between">
-              {articles[artNo]?.title}
-              <button
-                onClick={() =>
-                  dispatch(
-                    removeWidget({ dashboardId: id, widgetId: props.props.id })
-                  )
-                }
-                className="flex top-2 right-0 cursor-pointer ml-2 text-red-500"
-              >
-                <MdDelete size={30} />
-              </button>
-            </h1>
-            <span className="text-sm text-[#9299A5]">
-              {articles[artNo]?.source.name + " - " + articles[artNo]?.author}
-            </span>
-          </span>
-        </div>
-        <div className="p-9">
-          <p className="text-base text-[#9299A5]">
-            {articles[artNo]?.description}
-          </p>
-        </div>
-
-        <div className="flex justify-between px-4 text-[#9299A5]">
+      <div className="h-full p-2 flex flex-col justify-between">
+        {/* Top content */}
+        {articles[artNo]?.author === null ? (
+          <div className="flex w-full justify-between">
+            <div className="flex justify-center items-center mt-20">
+              <IoIosInformationCircleOutline className="text-red-400 text-4xl" />
+              <p className="text-2xl ml-2 text-left text-gray-400">
+                This Article is not available please change the page
+              </p>
+            </div>
+            <WidgetMenuBar isOpen={widgetMenu} setIsOpen={setWidgetMenu} id={id} widgetId={props.props.id}/>
+          </div>
+        ) : (
+          <div>
+            <div className="flex gap-4 text-white">
+              <img
+                className="w-14 h-14 mt-2 rounded-full object-cover"
+                src={articles[artNo]?.urlToImage}
+                alt="news"
+              />
+              <span className="w-full">
+                <h1 className="font-bold text-2xl w-full flex justify-between">
+                  {articles[artNo]?.title}
+                  <WidgetMenuBar isOpen={widgetMenu} setIsOpen={setWidgetMenu} id={id} widgetId={props.props.id}/>
+                </h1>
+                <span className="text-sm text-[#9299A5]">
+                  {articles[artNo]?.source.name +
+                    " - " +
+                    articles[artNo]?.author}
+                </span>
+              </span>
+            </div>
+            <div className="p-9">
+              <p className="text-base text-[#9299A5]">
+                {articles[artNo]?.description}
+              </p>
+            </div>
+          </div>
+        )}
+        {/* Footer content */}
+        <div className="mt-auto flex justify-between px-4 text-[#9299A5]">
           <span className="flex gap-4 items-center">
             <FaRegCalendarCheck className="text-[#9299A5]" />
             {formattedDate}
