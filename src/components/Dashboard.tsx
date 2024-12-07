@@ -14,10 +14,16 @@ export const Dashboard = () => {
   const { id } = useParams();
 
   const dash = dashboard.find((dash) => dash.id === id);
+  const widgetL = dash?.widgets?.length;
 
   return (
     <>
-      <div className="w-full resize h-[200vh] px-6 flex flex-col overflow-hidden">
+      <div
+        style={{
+          height: `calc(100vh + ${widgetL && widgetL * 50}vh)`,
+        }}
+        className={`w-full px-6 flex h-[200vh] sm:h-screen flex-col overflow-auto`}
+      >
         <div className="w-full flex justify-between pt-4 p-2">
           <h1 className="text-white text-lg capitalize">{dash?.title}</h1>
           <button
@@ -29,16 +35,13 @@ export const Dashboard = () => {
           </button>
         </div>
 
-      <div className="flex-grow gap-5 grid grid-cols-2 grid-flow-row w-full overflow-auto">
+        <div className="flex-grow md:flex relative h-full gap-5 w-full md:overflow-hidden overflow-scroll">
           {dash?.widgets?.map((widget, index) => (
-            // <div className="border-2">
-              <Widget key={index} widget={widget} widgets={dash?.widgets} />
-            // </div>
+            <Widget key={index} widget={widget} widgets={dash?.widgets} />
           ))}
-          </div>
+        </div>
         {isModal && <WidgetModal setIsModal={setIsModal} />}
       </div>
-
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { HiPlusSmall } from "react-icons/hi2";
 import { FaSortAlphaDownAlt, FaSortAmountDown } from "react-icons/fa";
@@ -28,13 +28,30 @@ export const DashboardLists = () => {
     0: false,
   });
   const [isSortModal, setIsSortModal] = useState(false);
+  const sortRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+        setIsSortModal(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  
+
   const handleDashClick = (id) => {
     dispatch(setCurrentDashId(id));
     navigate(`/dashboard/${id}`, { state: { id: id } });
   };
-  console.log("isModal", isDashModal);
+
   return (
     <>
       <div className="text-white w-2/3 mt-40">
@@ -65,11 +82,14 @@ export const DashboardLists = () => {
             {" "}
             <h3>All Dashboard </h3>{" "}
             <FaSortAmountDown
-              onClick={() => setIsSortModal(!isSortModal)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsSortModal(!isSortModal)
+              }}
               className="cursor-pointer"
             />
             {isSortModal && (
-              <div className="absolute flex flex-col gap-3 bg-[#131316] z-10 rounded right-4 top-8 border border-[#1D212D] text-center p-2 px-4">
+              <div ref={sortRef} className="absolute flex flex-col gap-3 bg-[#131316] z-10 rounded right-4 top-8 border border-[#1D212D] text-center p-2 px-4">
                 <p className="text-gray-400 p-2">SORT BY</p>
                 <button
                   onClick={(e) => {
@@ -119,7 +139,7 @@ export const DashboardLists = () => {
                         }}
                         className="text-gray-200 flex items-center gap-2"
                       >
-                        <MdDelete />
+                        <MdDelete className="text-red-400" />
                         Delete Dashboard
                       </button>
                     </div>

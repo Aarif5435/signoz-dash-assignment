@@ -98,7 +98,7 @@ export const Widget = ({ widget, widgets }) => {
         }
       }}
       bounds="parent"
-      className="w-fit mt-5 min-w-[500px] h-96 min-h-96 p-4 fixed text-white rounded border-2 border-[#161922] overflow-auto scrollbar-hide"
+      className="w-fit mt-5 min-w-[500px] h-96 min-h-96 p-4 hover:border-[#292f3f] fixed text-white rounded border-2 border-[#161922] overflow-auto scrollbar-hide"
       >
       <Component props={{ props, id, widget }} />
     </Rnd>

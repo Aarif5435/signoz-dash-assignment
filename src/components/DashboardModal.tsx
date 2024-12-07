@@ -33,7 +33,7 @@ export const DashboardModal = ({ setIsModal, isOpen }) => {
           <h1 className="py-2 font-semibold">Add Dashboard</h1>
           <input
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
+              if (e.key === "Enter") {
                 handleDashboard(title, uuid4());
               }
             }}

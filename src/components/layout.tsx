@@ -17,15 +17,13 @@ export const Layout = () => {
         element={
           <div className="flex justify-center w-full h-full">
             <DashboardLists />
-          </div>
+           </div>
         }
       />
       <Route
         path="/dashboard/:id"
         element={
-          <div className="w-full h-full">
             <Dashboard />
-          </div>
         }
       />
     </Routes>
