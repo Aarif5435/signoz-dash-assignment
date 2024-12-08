@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
-  fetchNewsAsync,
   fetchWeatherAsync,
-  removeWidget,
   updateWidget,
-  Widget,
 } from "../../redux/widgetSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { WeatherData } from "./widget.modal";
 import { IoSearchSharp } from "react-icons/io5";
 import { TiWeatherWindyCloudy } from "react-icons/ti";
 import { CiTempHigh } from "react-icons/ci";
 import { WiHumidity } from "react-icons/wi";
 import { WiStrongWind } from "react-icons/wi";
 import { CiCloud } from "react-icons/ci";
-import { MdDelete } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../utils/loadingSpinner";
 import { WidgetMenuBar } from "./widgetMenuBar";
@@ -28,7 +23,7 @@ export const WeatherWidget = ({ props }) => {
   const [city, setCity] = useState(props.props.location);
   const [inpVal, setInpVal] = useState("");
   const [widgetMenu, setWidgetMenu] = useState(false);
-  
+
   const widget = props.widget;
   const { id } = useParams();
   const widgetId = widget.id;
